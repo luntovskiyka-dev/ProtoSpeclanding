@@ -1,0 +1,11 @@
+# NOT ACTIVE. Copy this file to public/_redirects only when the redirect task starts.
+# See docs/redirects.md. Do not add keep-URLs (/ , /blog, /contacts, the two kept posts).
+# The Cyrillic URL is listed twice: raw UTF-8 and percent-encoded.
+
+/guide /zadachi/sajt 301
+/blog/ot-prototipa-do-koda-dlya-pm /zadachi/sajt 301
+/blog/chto-takoe-strukturirovannoe-tz /tz-dlya-nejroseti 301
+/blog/kak-veb-studii-avtomatiziruyut-tz /tz-dlya-nejroseti 301
+/faq /about 301
+/blog/лучшие-бесплатные-инструменты-ai-разработки-2026 /blog/besplatnye-nejroseti-dlya-programmirovaniya 301
+/blog/%D0%BB%D1%83%D1%87%D1%88%D0%B8%D0%B5-%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D1%8B%D0%B5-%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B-ai-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B8-2026 /blog/besplatnye-nejroseti-dlya-programmirovaniya 301

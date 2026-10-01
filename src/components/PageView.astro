@@ -1,0 +1,56 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../layouts/ArticleLayout.astro';
+import HubLayout from '../layouts/HubLayout.astro';
+import PromptLayout from '../layouts/PromptLayout.astro';
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+import { childLinks, navigation } from '../lib/pages';
+import { pagePath } from '../lib/seo';
+
+interface Props {
+  page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+const pages = await getCollection('pages');
+const path = pagePath(page.id);
+const nav = navigation(pages, path);
+const { Content } = await render(page);
+---
+
+{
+  page.data.kind === 'hub' && (
+    <HubLayout page={page} nav={nav} children={childLinks(pages, path)}>
+      <Content />
+    </HubLayout>
+  )
+}
+{
+  page.data.kind === 'article' && (
+    <ArticleLayout page={page} nav={nav}>
+      <Content />
+    </ArticleLayout>
+  )
+}
+{
+  page.data.kind === 'prompt' && (
+    <PromptLayout page={page} nav={nav}>
+      <Content />
+    </PromptLayout>
+  )
+}
+{
+  page.data.kind === 'tool' && (
+    <ToolLayout page={page} nav={nav}>
+      <Content />
+    </ToolLayout>
+  )
+}
+{
+  page.data.kind === 'service' && (
+    <ServiceLayout page={page} nav={nav}>
+      <Content />
+    </ServiceLayout>
+  )
+}

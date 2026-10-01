@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Answer from '../components/Answer.astro';
+import DraftBanner from '../components/DraftBanner.astro';
+import QueryNote from '../components/QueryNote.astro';
+import type { NavItem } from '../lib/pages';
+import { pagePath } from '../lib/seo';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  page: CollectionEntry<'pages'>;
+  nav: NavItem[];
+}
+
+const { page, nav } = Astro.props;
+---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  path={pagePath(page.id)}
+  h1={page.data.h1}
+  kind="article"
+  draft={page.data.draft}
+  nav={nav}
+  breadcrumbs={page.data.breadcrumbs}
+  faq={page.data.faq}
+  ogType="article"
+>
+  <DraftBanner draft={page.data.draft} />
+  <h1 class="mt-4 text-3xl font-semibold tracking-tight">{page.data.h1}</h1>
+  <QueryNote query={page.data.query} draft={page.data.draft} />
+  <Answer text={page.data.answer} />
+  <div class="content">
+    <slot />
+  </div>
+</BaseLayout>

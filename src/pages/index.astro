@@ -1,0 +1,11 @@
+---
+import { getEntry } from 'astro:content';
+import PageView from '../components/PageView.astro';
+
+const page = await getEntry('pages', 'index');
+if (!page) {
+  throw new Error('Missing content entry pages/index.md');
+}
+---
+
+<PageView page={page} />

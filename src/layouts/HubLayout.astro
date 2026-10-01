@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Answer from '../components/Answer.astro';
+import ChildList from '../components/ChildList.astro';
+import DraftBanner from '../components/DraftBanner.astro';
+import QueryNote from '../components/QueryNote.astro';
+import type { ChildLink, NavItem } from '../lib/pages';
+import { pagePath } from '../lib/seo';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  page: CollectionEntry<'pages'>;
+  nav: NavItem[];
+  children: ChildLink[];
+}
+
+const { page, nav, children } = Astro.props;
+const path = pagePath(page.id);
+---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  path={path}
+  h1={page.data.h1}
+  kind={page.data.kind}
+  draft={page.data.draft}
+  nav={nav}
+  breadcrumbs={page.data.breadcrumbs}
+  faq={page.data.faq}
+>
+  <DraftBanner draft={page.data.draft} />
+  <h1 class="mt-4 text-3xl font-semibold tracking-tight">{page.data.h1}</h1>
+  <QueryNote query={page.data.query} draft={page.data.draft} />
+  <Answer text={page.data.answer} />
+  <div class="content">
+    <slot />
+  </div>
+  <ChildList items={children} heading={path === '/' ? 'Разделы' : 'Материалы раздела'} />
+</BaseLayout>

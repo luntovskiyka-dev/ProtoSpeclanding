@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { navigation } from '../lib/pages';
+
+const pages = await getCollection('pages');
+const nav = navigation(pages, '/404');
+---
+
+<BaseLayout
+  title="Страница не найдена — ProtoSpec"
+  description="Такой страницы на ProtoSpec нет. Откройте раздел с задачами, промптами или правилами для Cursor и Claude Code."
+  path="/404"
+  h1="Страница не найдена"
+  kind="notfound"
+  draft={true}
+  nav={nav}
+>
+  <h1 class="mt-8 text-3xl font-semibold tracking-tight">Страница не найдена</h1>
+  <p class="mt-4">Такой страницы нет. Откройте один из разделов:</p>
+  <ul class="mt-4 list-disc pl-5">
+    <li><a href="/">Главная</a></li>
+    <li><a href="/zadachi">Задачи</a></li>
+    <li><a href="/prompty">Промпты</a></li>
+    <li><a href="/cursor">Cursor</a></li>
+    <li><a href="/claude-code">Claude Code</a></li>
+  </ul>
+</BaseLayout>

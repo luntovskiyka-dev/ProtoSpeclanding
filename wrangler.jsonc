@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "protospec",
+  "compatibility_date": "2026-10-01",
+  // Build command: npm run build
+  // Static Astro output only. Do not add a custom domain or route here.
+  // app.protospec.ru is a separate app and is not served from this worker.
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

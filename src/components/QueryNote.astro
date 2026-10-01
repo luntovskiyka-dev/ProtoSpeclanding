@@ -1,0 +1,10 @@
+---
+interface Props {
+  query?: string;
+  draft: boolean;
+}
+
+const { query, draft } = Astro.props;
+---
+
+{draft && query && <p class="query">Главный запрос: {query}</p>}

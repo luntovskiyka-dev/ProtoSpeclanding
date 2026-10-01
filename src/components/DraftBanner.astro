@@ -1,0 +1,9 @@
+---
+interface Props {
+  draft: boolean;
+}
+
+const { draft } = Astro.props;
+---
+
+{draft && <p class="draft-banner">Текст в работе</p>}

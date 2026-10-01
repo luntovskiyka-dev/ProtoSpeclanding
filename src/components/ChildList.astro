@@ -1,0 +1,28 @@
+---
+import type { ChildLink } from '../lib/pages';
+
+interface Props {
+  items: ChildLink[];
+  heading: string;
+}
+
+const { items, heading } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section aria-labelledby="section-children">
+      <h2 id="section-children" class="mt-10 text-xl font-semibold">
+        {heading}
+      </h2>
+      <ul class="child-list">
+        {items.map((item) => (
+          <li>
+            <a href={item.href}>{item.title}</a>
+            <p>{item.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
