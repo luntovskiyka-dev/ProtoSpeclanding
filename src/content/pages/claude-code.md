@@ -18,4 +18,4 @@ breadcrumbs:
 ---
 Текст в работе.
 
-Файл проекта разобран отдельно: [CLAUDE.md](/claude-code/claude-md). Общий стандарт для нескольких агентов — [AGENTS.md](/agents-md).
+Файл проекта разобран отдельно: [CLAUDE.md](/claude-code/claude-md). Бесплатный доступ — на странице [Claude Code бесплатно](/claude-code/besplatno). Общий стандарт для нескольких агентов — [AGENTS.md](/agents-md).

@@ -54,7 +54,7 @@ Launch URLs (★ in structure-v1 section 2), all `draft: true` until the text is
 
 - `/`
 - `/cursor`, `/cursor/rules`
-- `/claude-code`, `/claude-code/claude-md`
+- `/claude-code`, `/claude-code/claude-md`, `/claude-code/besplatno`
 - `/agents-md`
 - `/zadachi`, `/zadachi/sajt`, `/zadachi/telegram-bot`
 - `/prompty`, `/prompty/sozdanie-sajta`, `/prompty/plan-pered-kodom`, `/prompty/ispravlenie-oshibki`, `/prompty/sozdat-agents-md`
@@ -90,7 +90,7 @@ Not implemented. The section 4 map, including both forms of the Cyrillic URL, is
 
 ## Readings of structure-v1
 
-- Section 2/3 is the URL source. Wave 2 paths are not created.
+- Section 2/3 is the URL source. Wave 2 paths are not created. `/claude-code/besplatno` was approved for launch after that document and is not in its ★ list.
 - «19 content pages + 3 service pages» are the ★ URLs. `/blog/protospec-vs-structura` is the extra kept URL from the same section. It has no H1 in section 3; the stub H1 is «ProtoSpec и Structura: в чём разница».
 - Service H1s are split from the combined section 3 row: «О проекте», «Контакты и реквизиты», «Политика конфиденциальности».
 - Title tags are shortened so they stay within 60 characters. Visible H1s match section 3.

@@ -13,6 +13,7 @@ const launchPaths = [
   '/cursor/rules',
   '/claude-code',
   '/claude-code/claude-md',
+  '/claude-code/besplatno',
   '/agents-md',
   '/zadachi',
   '/zadachi/sajt',
@@ -36,6 +37,7 @@ const launchPaths = [
 const articlePaths = [
   '/cursor/rules',
   '/claude-code/claude-md',
+  '/claude-code/besplatno',
   '/agents-md',
   '/tz-dlya-nejroseti',
   '/zadachi/sajt',
@@ -109,6 +111,7 @@ const launchH1: Record<string, string> = {
   '/cursor/rules': 'Правила Cursor: .cursor/rules и .mdc — настройка и готовые примеры',
   '/claude-code': 'Claude Code: CLAUDE.md, промпты и шаблоны под задачи',
   '/claude-code/claude-md': 'CLAUDE.md: что писать, где хранить и 3 готовых шаблона',
+  '/claude-code/besplatno': 'Claude Code бесплатно: можно ли пользоваться без оплаты',
   '/agents-md': 'AGENTS.md: что это, примеры файла и как подключить в Cursor, Codex и Claude Code',
   '/tz-dlya-nejroseti': 'ТЗ для нейросети: шаблон технического задания для Cursor и Claude Code',
   '/generator': 'Генератор ТЗ и промпта для Cursor и Claude Code',
@@ -137,6 +140,12 @@ describe('built HTML', () => {
       expect(root.querySelector('h1')?.text, urlPath).toBe(h1);
       expect(root.toString(), urlPath).toContain('Текст в работе');
     }
+  });
+
+  it('links /claude-code/besplatno from the Claude Code hub', async () => {
+    const html = await readFile(path.join(dist, 'claude-code.html'), 'utf8');
+    expect(html).toContain('href="/claude-code/besplatno"');
+    expect(html).not.toContain('/claude-code/besplatno/');
   });
 
   it('builds every launch URL and the 404 page as extensionless files', async () => {
