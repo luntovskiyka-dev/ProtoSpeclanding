@@ -32,7 +32,7 @@ Astro, TypeScript, Tailwind. Fully static (`output: 'static'`). `lang="ru"`.
 
 `drop-trailing-slash` answers `/page/` with a 307 to `/page`. That is slash normalization, not the legacy 301 map.
 
-Styling is minimal and token-based (`--ps-*` variables in `src/styles/global.css`, mapped into Tailwind). The typeface is a system stack. Markdown code blocks are not syntax-highlighted, so they use those same tokens. No third-party scripts, analytics, or font CDNs.
+Styling is token-based (`--ps-*` variables in `src/styles/global.css`, mapped into Tailwind). UI typeface is self-hosted Onest Variable; code uses JetBrains Mono Variable (both via `@fontsource-variable/*`, cyrillic + latin only). System stacks stay as fallback. Markdown code blocks are not syntax-highlighted, so they use those same tokens. No third-party scripts, analytics, or font CDNs.
 
 ## Indexing
 

@@ -7,7 +7,7 @@ Hard rules for this repository. They override convenience.
 - The sitemap lists only canonical, indexable 200 pages. Drafts, the 404 page, `robots.txt` and the sitemap URL itself stay out. Sitemap locations do not end with a slash.
 - `draft: true` pages are built so the tree is navigable, but they are excluded from the sitemap and always emit `noindex,nofollow`, even when `SITE_LIVE=true`.
 - `SITE_LIVE=true` is the only indexing switch. When it is unset, every page emits `<meta name="robots" content="noindex,nofollow">` and `robots.txt` disallows all. Do not set it for a workers.dev preview.
-- No third-party scripts, analytics, or external fonts/CDNs. The font stack stays on the system fonts. Copy-to-clipboard is a tiny inline script in the base layout.
+- No third-party scripts, analytics, or external fonts/CDNs. Fonts may be self-hosted npm packages (`@fontsource-variable/*`) bundled into `dist/`; no Google Fonts or other CDN. Copy-to-clipboard is a tiny inline script in the base layout.
 - These verification tags stay in the shared base layout, byte for byte:
 
 ```html

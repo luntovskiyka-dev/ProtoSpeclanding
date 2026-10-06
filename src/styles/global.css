@@ -1,30 +1,46 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 :root {
-  --ps-bg: #f6f5f3;
-  --ps-surface: #ffffff;
-  --ps-text: #1c1917;
-  --ps-muted: #57534e;
-  --ps-border: #e6e2dc;
-  --ps-accent: #1e3a5f;
-  --ps-answer-bg: #eef3f8;
-  --ps-code-bg: #f3f1ed;
-  --ps-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --ps-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-  --ps-measure: 42rem;
+  color-scheme: dark light;
+
+  --ps-bg: #0b0d10;
+  --ps-surface: #12151a;
+  --ps-surface-2: #181c23;
+  --ps-text: #e8eaed;
+  --ps-muted: #8b93a1;
+  --ps-border: #232933;
+  --ps-accent: #7c8cff;
+  --ps-accent-hover: #97a3ff;
+  --ps-accent-soft: rgb(124 140 255 / 0.12);
+  --ps-signal: #f5b14c;
+  --ps-answer-bg: var(--ps-surface-2);
+  --ps-code-bg: #0f1216;
+
+  --ps-font-sans: "Onest Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --ps-font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --ps-measure: 44rem;
+  --ps-container: 72rem;
   --ps-space: 1.25rem;
+  --ps-radius-card: 10px;
+  --ps-radius-control: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --ps-bg: #171513;
-    --ps-surface: #211f1c;
-    --ps-text: #f5f3f0;
-    --ps-muted: #c4bdb4;
-    --ps-border: #3a352f;
-    --ps-accent: #9ec1e6;
-    --ps-answer-bg: #243040;
-    --ps-code-bg: #2a2622;
+    --ps-bg: #f7f7f5;
+    --ps-surface: #ffffff;
+    --ps-surface-2: #f1f2f4;
+    --ps-text: #121417;
+    --ps-muted: #5b6270;
+    --ps-border: #e4e4e0;
+    --ps-accent: #4f5bd5;
+    --ps-accent-hover: #3d48b8;
+    --ps-accent-soft: rgb(79 91 213 / 0.1);
+    --ps-signal: #c47d12;
+    --ps-answer-bg: var(--ps-surface-2);
+    --ps-code-bg: #f1f2f4;
   }
 }
 
@@ -33,16 +49,22 @@
   --font-mono: var(--ps-font-mono);
   --color-bg: var(--ps-bg);
   --color-surface: var(--ps-surface);
+  --color-surface-2: var(--ps-surface-2);
   --color-ink: var(--ps-text);
   --color-muted: var(--ps-muted);
   --color-line: var(--ps-border);
   --color-accent: var(--ps-accent);
+  --color-accent-hover: var(--ps-accent-hover);
+  --color-accent-soft: var(--ps-accent-soft);
+  --color-signal: var(--ps-signal);
   --color-answer: var(--ps-answer-bg);
   --color-code: var(--ps-code-bg);
+  --radius-card: var(--ps-radius-card);
+  --radius-control: var(--ps-radius-control);
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: dark light;
 }
 
 body {
@@ -50,12 +72,39 @@ body {
   background: var(--ps-bg);
   color: var(--ps-text);
   font-family: var(--ps-font-sans);
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+h1 {
+  font-size: clamp(2.25rem, 1.4rem + 3.2vw, 4rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.kicker {
+  font-family: var(--ps-font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ps-muted);
 }
 
 :focus-visible {
   outline: 2px solid var(--ps-accent);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .skip {
@@ -67,6 +116,8 @@ body {
   color: var(--ps-text);
   padding: 0.4rem 0.7rem;
   border: 1px solid var(--ps-border);
+  border-radius: var(--ps-radius-control);
+  z-index: 100;
 }
 
 .skip:focus {
@@ -75,6 +126,11 @@ body {
 
 .wrap {
   width: min(100% - 2.5rem, var(--ps-measure));
+  margin-inline: auto;
+}
+
+.wrap-wide {
+  width: min(100% - 2.5rem, var(--ps-container));
   margin-inline: auto;
 }
 
