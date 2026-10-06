@@ -81,7 +81,7 @@ const canonicalTag = `<link rel="canonical" href="${canonical}">`;
   <body class="bg-bg text-ink">
     <a class="skip" href="#main">К содержанию</a>
     <Header nav={nav} />
-    <main id="main" class="pb-16">
+    <main id="main" class="main-shell">
       <div class={wide ? 'wrap-wide' : 'wrap'}>
         {path !== '/' && breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} />}
         <slot />

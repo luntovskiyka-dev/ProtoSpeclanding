@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import ArticleLayout from '../layouts/ArticleLayout.astro';
+import HomeLayout from '../layouts/HomeLayout.astro';
 import HubLayout from '../layouts/HubLayout.astro';
 import PromptLayout from '../layouts/PromptLayout.astro';
 import ServiceLayout from '../layouts/ServiceLayout.astro';
@@ -17,10 +18,35 @@ const pages = await getCollection('pages');
 const path = pagePath(page.id);
 const nav = navigation(pages, path);
 const { Content } = await render(page);
+
+const byPath = Object.fromEntries(
+  pages.map((entry) => {
+    const href = pagePath(entry.id);
+    return [
+      href,
+      {
+        href,
+        title: entry.data.title,
+        description: entry.data.description,
+      },
+    ];
+  }),
+);
 ---
 
 {
-  page.data.kind === 'hub' && (
+  page.id === 'index' && (
+    <HomeLayout
+      page={page}
+      nav={nav}
+      prompts={childLinks(pages, '/prompty')}
+      articles={childLinks(pages, '/blog')}
+      byPath={byPath}
+    />
+  )
+}
+{
+  page.data.kind === 'hub' && page.id !== 'index' && (
     <HubLayout page={page} nav={nav} children={childLinks(pages, path)}>
       <Content />
     </HubLayout>

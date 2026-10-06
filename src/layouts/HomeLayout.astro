@@ -1,0 +1,551 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Answer from '../components/Answer.astro';
+import DraftBanner from '../components/DraftBanner.astro';
+import QueryNote from '../components/QueryNote.astro';
+import BentoGrid from '../components/ui/BentoGrid.astro';
+import FileTree from '../components/ui/FileTree.astro';
+import GridPattern from '../components/ui/GridPattern.astro';
+import HeroPill from '../components/ui/HeroPill.astro';
+import SpecWindow from '../components/ui/SpecWindow.astro';
+import type { ChildLink, NavItem } from '../lib/pages';
+import { pagePath } from '../lib/seo';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  page: CollectionEntry<'pages'>;
+  nav: NavItem[];
+  prompts: ChildLink[];
+  articles: ChildLink[];
+  byPath: Record<string, { title: string; description: string; href: string }>;
+}
+
+const { page, nav, prompts, articles, byPath } = Astro.props;
+const path = pagePath(page.id);
+
+const matrix = [
+  {
+    task: 'Сайт',
+    tool: 'Cursor',
+    href: byPath['/zadachi/sajt']?.href ?? '/zadachi/sajt',
+    description: byPath['/zadachi/sajt']?.description ?? '',
+  },
+  {
+    task: 'Сайт',
+    tool: 'Claude Code',
+    href: byPath['/claude-code']?.href ?? '/claude-code',
+    description: byPath['/claude-code']?.description ?? '',
+  },
+  {
+    task: 'Telegram-бот',
+    tool: 'Cursor',
+    href: byPath['/zadachi/telegram-bot']?.href ?? '/zadachi/telegram-bot',
+    description: byPath['/zadachi/telegram-bot']?.description ?? '',
+  },
+  {
+    task: 'Telegram-бот',
+    tool: 'Claude Code',
+    href: byPath['/claude-code']?.href ?? '/claude-code',
+    description: byPath['/zadachi/telegram-bot']?.description ?? '',
+  },
+];
+
+const ruleCards = [
+  {
+    filename: 'AGENTS.md',
+    href: '/agents-md',
+    description: byPath['/agents-md']?.description ?? '',
+  },
+  {
+    filename: 'CLAUDE.md',
+    href: '/claude-code/claude-md',
+    description: byPath['/claude-code/claude-md']?.description ?? '',
+  },
+  {
+    filename: '.cursor/rules',
+    href: '/cursor/rules',
+    description: byPath['/cursor/rules']?.description ?? '',
+  },
+];
+
+const steps = [
+  { n: '01', title: 'ТЗ', phrase: 'Сформулировать задачу', href: '/tz-dlya-nejroseti' },
+  { n: '02', title: 'Правила', phrase: 'Зафиксировать контекст', href: '/agents-md' },
+  { n: '03', title: 'Промпт', phrase: 'Дать инструкции агенту', href: '/prompty' },
+  { n: '04', title: 'Проверка', phrase: 'Просмотреть результат', href: '/generator' },
+];
+---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  path={path}
+  h1={page.data.h1}
+  kind={page.data.kind}
+  draft={page.data.draft}
+  nav={nav}
+  breadcrumbs={page.data.breadcrumbs}
+  faq={page.data.faq}
+  wide
+>
+  <div class="home">
+    <section class="home-hero">
+      <GridPattern />
+      <div class="home-hero-inner">
+        <DraftBanner draft={page.data.draft} />
+        <HeroPill href="/generator">// 01 ТЗ</HeroPill>
+        <h1>{page.data.h1}</h1>
+        <QueryNote query={page.data.query} draft={page.data.draft} />
+        <Answer text={page.data.answer} />
+        <div class="home-actions">
+          <a class="btn btn-primary" href="/generator">Сгенерировать ТЗ</a>
+          <a class="btn btn-ghost" href="/zadachi">Выбрать задачу</a>
+        </div>
+        <SpecWindow />
+      </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="matrix-heading">
+      <p class="kicker">// матрица</p>
+      <h2 id="matrix-heading">Задача × инструмент</h2>
+      <div class="matrix">
+        {
+          matrix.map((cell) => (
+            <a class="matrix-card" href={cell.href}>
+              <span class="matrix-meta">
+                <span>{cell.task}</span>
+                <span aria-hidden="true">×</span>
+                <span>{cell.tool}</span>
+              </span>
+              <span class="matrix-desc">{cell.description}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="steps-heading">
+      <p class="kicker">// процесс</p>
+      <h2 id="steps-heading">Как это работает</h2>
+      <ol class="steps">
+        {
+          steps.map((step) => (
+            <li>
+              <a href={step.href} class="step-card">
+                <span class="step-n">{step.n}</span>
+                <span class="step-title">{step.title}</span>
+                <span class="step-phrase">{step.phrase}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="home-section home-rules" aria-labelledby="rules-heading">
+      <div>
+        <p class="kicker">// правила</p>
+        <h2 id="rules-heading">Файлы правил</h2>
+        <ul class="rule-cards">
+          {
+            ruleCards.map((card) => (
+              <li>
+                <a href={card.href} class="rule-card">
+                  <span class="rule-file">{card.filename}</span>
+                  <span class="rule-desc">{card.description}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <FileTree />
+    </section>
+
+    <section class="home-section" aria-labelledby="prompts-heading">
+      <p class="kicker">// промпты</p>
+      <h2 id="prompts-heading">Промпты</h2>
+      <BentoGrid items={prompts} />
+    </section>
+
+    <section class="home-section" aria-labelledby="articles-heading">
+      <p class="kicker">// статьи</p>
+      <h2 id="articles-heading">Статьи</h2>
+      <ul class="child-list">
+        {
+          articles.map((item) => (
+            <li>
+              <a href={item.href} class="child-card">
+                <span class="child-card-body">
+                  <span class="child-card-title">{item.title}</span>
+                  <span class="child-card-desc">{item.description}</span>
+                </span>
+                <span class="child-card-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="home-section home-app" aria-labelledby="app-heading">
+      <p class="kicker">// приложение</p>
+      <h2 id="app-heading">Приложение</h2>
+      <p class="home-app-lead">Приложение живёт отдельно от этого сайта.</p>
+      <a class="btn btn-ghost" href="https://app.protospec.ru" rel="noopener noreferrer">
+        app.protospec.ru
+      </a>
+    </section>
+
+    <section class="home-cta" aria-labelledby="cta-heading">
+      <GridPattern />
+      <div class="home-cta-inner">
+        <h2 id="cta-heading">{byPath['/generator']?.title ?? 'Генератор ТЗ'}</h2>
+        <div class="home-cta-row">
+          <a class="btn btn-primary" href="/generator">Сгенерировать ТЗ</a>
+          <span class="home-cta-pill">/generator</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .home {
+    display: grid;
+    gap: 0;
+  }
+
+  .home-hero {
+    position: relative;
+    padding: 0.5rem 0 3rem;
+  }
+
+  .home-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .home-hero :global(.answer) {
+    max-width: 40rem;
+    font-size: 1.125rem;
+  }
+
+  .home-hero :global(h1) {
+    max-width: 18ch;
+    margin: 0.25rem 0 0;
+  }
+
+  .home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0 1.1rem;
+    border-radius: var(--ps-radius-control);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background 160ms ease-out,
+      border-color 160ms ease-out,
+      color 160ms ease-out,
+      transform 160ms ease-out;
+  }
+
+  .btn-primary {
+    background: var(--ps-accent);
+    color: #0b0d10;
+  }
+
+  .btn-primary:hover {
+    background: var(--ps-accent-hover);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--ps-border);
+    background: transparent;
+    color: var(--ps-text);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--ps-accent);
+    color: var(--ps-accent);
+  }
+
+  @media (prefers-color-scheme: light) {
+    .btn-primary {
+      color: #ffffff;
+    }
+  }
+
+  .home-section {
+    position: relative;
+    padding: 3rem 0 0;
+  }
+
+  .home-section .kicker {
+    margin: 0 0 0.65rem;
+  }
+
+  .home-section h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .matrix {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .matrix-card {
+    display: grid;
+    gap: 0.55rem;
+    padding: 1.1rem 1.15rem;
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-card);
+    background: var(--ps-surface);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 160ms ease-out,
+      transform 160ms ease-out;
+  }
+
+  .matrix-card:hover {
+    border-color: var(--ps-accent);
+    transform: translateY(-2px);
+  }
+
+  .matrix-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-family: var(--ps-font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ps-accent);
+  }
+
+  .matrix-desc {
+    color: var(--ps-muted);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .steps {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 1.35rem;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    width: 1px;
+    background: var(--ps-border);
+  }
+
+  .step-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'n title'
+      'n phrase';
+    column-gap: 0.9rem;
+    row-gap: 0.2rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-card);
+    background: var(--ps-surface);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 160ms ease-out;
+  }
+
+  .step-card:hover {
+    border-color: var(--ps-accent);
+  }
+
+  .step-n {
+    grid-area: n;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--ps-border);
+    background: var(--ps-bg);
+    font-family: var(--ps-font-mono);
+    font-size: 0.75rem;
+    color: var(--ps-muted);
+  }
+
+  .step-title {
+    grid-area: title;
+    font-weight: 650;
+  }
+
+  .step-phrase {
+    grid-area: phrase;
+    color: var(--ps-muted);
+    font-size: 0.9375rem;
+  }
+
+  .home-rules {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .rule-cards {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rule-card {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-card);
+    background: var(--ps-surface);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 160ms ease-out,
+      transform 160ms ease-out;
+  }
+
+  .rule-card:hover {
+    border-color: var(--ps-accent);
+    transform: translateY(-2px);
+  }
+
+  .rule-file {
+    font-family: var(--ps-font-mono);
+    font-size: 0.9375rem;
+    color: var(--ps-accent);
+  }
+
+  .rule-desc {
+    color: var(--ps-muted);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .home-app-lead {
+    margin: 0.85rem 0 1rem;
+    max-width: 36rem;
+    color: var(--ps-muted);
+  }
+
+  .home-cta {
+    position: relative;
+    margin-top: 3.5rem;
+    margin-bottom: 1rem;
+    padding: 2.5rem 1.25rem;
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-card);
+    background: var(--ps-surface);
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .home-cta-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1.1rem;
+    justify-items: center;
+  }
+
+  .home-cta h2 {
+    margin: 0;
+    max-width: 18ch;
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .home-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .home-cta-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--ps-border);
+    border-radius: 999px;
+    background: var(--ps-bg);
+    font-family: var(--ps-font-mono);
+    font-size: 0.75rem;
+    color: var(--ps-muted);
+  }
+
+  @media (min-width: 720px) {
+    .matrix {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .steps::before {
+      left: 12%;
+      right: 12%;
+      top: 1.9rem;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+    }
+
+    .home-rules {
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .matrix-card:hover,
+    .rule-card:hover {
+      transform: none;
+    }
+  }
+</style>
