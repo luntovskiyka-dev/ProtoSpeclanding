@@ -1,12 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import Answer from '../components/Answer.astro';
-import DraftBanner from '../components/DraftBanner.astro';
-import QueryNote from '../components/QueryNote.astro';
 import BentoGrid from '../components/ui/BentoGrid.astro';
 import FileTree from '../components/ui/FileTree.astro';
 import GridPattern from '../components/ui/GridPattern.astro';
-import HeroPill from '../components/ui/HeroPill.astro';
 import SpecWindow from '../components/ui/SpecWindow.astro';
 import type { ChildLink, NavItem } from '../lib/pages';
 import { pagePath } from '../lib/seo';
@@ -22,6 +18,10 @@ interface Props {
 
 const { page, nav, prompts, articles, byPath } = Astro.props;
 const path = pagePath(page.id);
+
+const h1 = page.data.h1;
+const h1Mute = 'Cursor, Claude Code и другие';
+const h1Lead = h1.endsWith(h1Mute) ? h1.slice(0, -h1Mute.length) : h1;
 
 const matrix = [
   {
@@ -90,18 +90,36 @@ const steps = [
 >
   <div class="home">
     <section class="home-hero">
-      <GridPattern />
-      <div class="home-hero-inner">
-        <DraftBanner draft={page.data.draft} />
-        <HeroPill href="/generator">// 01 ТЗ</HeroPill>
-        <h1>{page.data.h1}</h1>
-        <QueryNote query={page.data.query} draft={page.data.draft} />
-        <Answer text={page.data.answer} />
-        <div class="home-actions">
-          <a class="btn btn-primary" href="/generator">Сгенерировать ТЗ</a>
-          <a class="btn btn-ghost" href="/zadachi">Выбрать задачу</a>
+      <div class="hero-blueprint" aria-hidden="true">
+        <span class="bp-v bp-v-l"></span>
+        <span class="bp-v bp-v-r"></span>
+        <span class="bp-h bp-h-top"></span>
+        <span class="bp-mark bp-mark-tl"></span>
+        <span class="bp-mark bp-mark-tr"></span>
+      </div>
+      <div class="home-hero-inner wrap-wide">
+        <div class="hero-copy">
+          <div class="hero-h1-wrap">
+            <GridPattern class="hero-grid" />
+            <h1>
+              {h1Lead}<span class="muted">{h1Mute}</span>
+            </h1>
+          </div>
+          <p class="hero-lead">{page.data.answer}</p>
+          <div class="home-actions">
+            <a class="btn btn-primary" href="/generator">Сгенерировать ТЗ</a>
+            <a class="btn btn-secondary" href="/zadachi">Выбрать задачу →</a>
+          </div>
+          {page.data.draft && <p class="hero-draft">Текст в работе</p>}
         </div>
-        <SpecWindow />
+        <div class="hero-window">
+          <div class="hero-blueprint-win" aria-hidden="true">
+            <span class="bp-h bp-h-win"></span>
+            <span class="bp-mark bp-mark-bl"></span>
+            <span class="bp-mark bp-mark-br"></span>
+          </div>
+          <SpecWindow />
+        </div>
       </div>
     </section>
 
@@ -194,7 +212,7 @@ const steps = [
       <p class="kicker">// приложение</p>
       <h2 id="app-heading">Приложение</h2>
       <p class="home-app-lead">Приложение живёт отдельно от этого сайта.</p>
-      <a class="btn btn-ghost" href="https://app.protospec.ru" rel="noopener noreferrer">
+      <a class="btn btn-secondary" href="https://app.protospec.ru" rel="noopener noreferrer">
         app.protospec.ru
       </a>
     </section>
@@ -220,75 +238,161 @@ const steps = [
 
   .home-hero {
     position: relative;
-    padding: 0.5rem 0 3rem;
+    padding: 3.5rem 0 3rem;
+    overflow: hidden;
+  }
+
+  .hero-blueprint {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bp-v {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    border-left: 1px dashed rgb(255 255 255 / 0.07);
+  }
+
+  .bp-v-l {
+    left: calc(max(1.25rem, (100% - var(--ps-container)) / 2) - 24px);
+  }
+
+  .bp-v-r {
+    right: calc(max(1.25rem, (100% - var(--ps-container)) / 2) - 24px);
+  }
+
+  .bp-h {
+    position: absolute;
+    height: 0;
+    border-top: 1px dashed rgb(255 255 255 / 0.07);
+  }
+
+  .bp-h-top {
+    top: 0;
+    left: calc(max(1.25rem, (100% - var(--ps-container)) / 2) - 24px);
+    right: calc(max(1.25rem, (100% - var(--ps-container)) / 2) - 24px);
+  }
+
+  .bp-mark {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: rgb(255 255 255 / 0.18);
+    transform: rotate(45deg);
+  }
+
+  .bp-mark-tl {
+    top: -3.5px;
+    left: calc(max(1.25rem, (100% - var(--ps-container)) / 2) - 24px - 3.5px);
+  }
+
+  .bp-mark-tr {
+    top: -3.5px;
+    right: calc(max(1.25rem, (100% - var(--ps-container)) / 2) - 24px - 3.5px);
   }
 
   .home-hero-inner {
     position: relative;
     z-index: 1;
     display: grid;
-    gap: 1rem;
+    gap: 0;
+    justify-items: stretch;
+  }
+
+  .hero-copy {
+    position: relative;
+    display: grid;
+    gap: 0;
     justify-items: start;
   }
 
-  .home-hero :global(.answer) {
-    max-width: 40rem;
-    font-size: 1.125rem;
+  .hero-h1-wrap {
+    position: relative;
+    width: 100%;
+    max-width: min(80rem, calc(100vw - 2.5rem));
   }
 
-  .home-hero :global(h1) {
-    max-width: 18ch;
-    margin: 0.25rem 0 0;
+  .hero-h1-wrap :global(.hero-grid) {
+    inset: -1.5rem -2rem -2rem;
+  }
+
+  .home-hero h1 {
+    position: relative;
+    margin: 0;
+    max-width: min(80rem, calc(100vw - 2.5rem));
+    font-size: 2.25rem;
+    font-weight: 560;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+
+  .home-hero h1 .muted {
+    display: block;
+    color: var(--ps-muted);
+  }
+
+  .hero-lead {
+    margin: 1.25rem 0 0;
+    max-width: 600px;
+    color: var(--ps-muted);
+    font-size: 1.125rem;
+    line-height: 1.55;
   }
 
   .home-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-  }
-
-  .btn {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-height: 2.5rem;
-    padding: 0 1.1rem;
-    border-radius: var(--ps-radius-control);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition:
-      background 160ms ease-out,
-      border-color 160ms ease-out,
-      color 160ms ease-out,
-      transform 160ms ease-out;
+    gap: 1rem 1.25rem;
+    margin-top: 2rem;
   }
 
-  .btn-primary {
-    background: var(--ps-accent);
-    color: #0b0d10;
-  }
-
-  .btn-primary:hover {
-    background: var(--ps-accent-hover);
-  }
-
-  .btn-ghost {
-    border: 1px solid var(--ps-border);
+  .hero-draft {
+    margin: 1rem 0 0;
+    padding: 0;
+    border: 0;
     background: transparent;
-    color: var(--ps-text);
+    color: var(--ps-muted);
+    font-family: var(--ps-font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
   }
 
-  .btn-ghost:hover {
-    border-color: var(--ps-accent);
-    color: var(--ps-accent);
+  .hero-window {
+    position: relative;
+    margin-top: 3rem;
+    width: 100%;
   }
 
-  @media (prefers-color-scheme: light) {
-    .btn-primary {
-      color: #ffffff;
-    }
+  .hero-blueprint-win {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .hero-window .bp-h-win {
+    position: absolute;
+    top: 0;
+    left: -24px;
+    width: calc(100% + 48px);
+  }
+
+  .bp-mark-bl {
+    top: -3.5px;
+    left: calc(-24px - 3.5px);
+  }
+
+  .bp-mark-br {
+    top: -3.5px;
+    right: calc(-24px - 3.5px);
   }
 
   .home-section {
@@ -518,6 +622,19 @@ const steps = [
   }
 
   @media (min-width: 720px) {
+    .home-hero {
+      padding: 7rem 0 3.5rem;
+    }
+
+    .home-hero h1 {
+      font-size: 3.5rem;
+      line-height: 1.05;
+    }
+
+    .hero-window {
+      margin-top: 4.5rem;
+    }
+
     .matrix {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -539,6 +656,14 @@ const steps = [
     .home-rules {
       grid-template-columns: 1.2fr 0.8fr;
       align-items: start;
+    }
+  }
+
+  @media (max-width: 719px) {
+    .bp-v,
+    .bp-mark,
+    .bp-h-win {
+      display: none;
     }
   }
 

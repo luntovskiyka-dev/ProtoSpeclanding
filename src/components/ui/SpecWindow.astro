@@ -1,9 +1,11 @@
 ---
 /**
  * Spec Window — editor chrome with CSS-only radio tabs.
- * Border beam edge adapted from Magic UI Border Beam (MIT).
+ * Content from design-refs/content/spec-window-example.md (verbatim).
+ * Border beam via BorderBeam.astro (Magic UI port).
  */
 import BorderBeam from './BorderBeam.astro';
+import FileTree from './FileTree.astro';
 
 interface Props {
   class?: string;
@@ -11,49 +13,164 @@ interface Props {
 
 const { class: className = '' } = Astro.props;
 const uid = `spec-${Math.random().toString(36).slice(2, 8)}`;
+
+const tz = `Цель: одностраничный сайт студии йоги, чтобы новые клиенты увидели
+расписание и цены и записались через Telegram.
+
+Что входит:
+- первый экран с названием, коротким описанием и кнопкой «Записаться»;
+- расписание занятий по дням недели;
+- цены на разовое занятие и абонементы;
+- блок «Как нас найти» с адресом и картой-картинкой;
+- кнопка записи, которая открывает Telegram-чат студии.
+
+Что не входит:
+- онлайн-оплата и личный кабинет;
+- админка для редактирования расписания;
+- блог.
+
+Технические требования:
+- Astro, статическая сборка, без бэкенда;
+- расписание и цены лежат в одном файле данных, чтобы их было просто менять;
+- адаптивная вёрстка от 360 px.
+
+Готово, когда:
+- npm run build проходит без ошибок;
+- страница нормально выглядит на телефоне и на компьютере;
+- кнопка «Записаться» открывает Telegram;
+- все тексты заполнены, пометок [ЗАПОЛНИ] не осталось.
+
+Название студии: [ЗАПОЛНИ: название]
+Ссылка на Telegram: [ЗАПОЛНИ: t.me/...]
+Адрес: [ЗАПОЛНИ: адрес]`;
+
+const mdc = `---
+description: Правила проекта: лендинг студии йоги на Astro
+globs:
+alwaysApply: true
+---
+- Стек: Astro, статическая сборка. Бэкенд не добавляй.
+- Страница: src/pages/index.astro, блоки в src/components/.
+- Расписание и цены храни в src/data/, не в разметке.
+- Новые зависимости ставь только с объяснением, зачем они нужны.
+- Не трогай файлы, о которых тебя не просили.
+- Секреты и ключи в код не пиши.
+- Перед тем как сказать «готово», запусти npm run build.
+- В конце коротко перечисли, какие файлы изменил и зачем.`;
+
+const prompt = `Прочитай ТЗ ниже и правила в .cursor/rules/project.mdc.
+Код пока не пиши. Сначала задай вопросы обо всём, что неясно
+или не хватает. Потом предложи план по шагам: какие файлы создашь
+и в каком порядке. Начнём после того, как я подтвержу план.
+
+[вставь сюда ТЗ]`;
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+function highlightLine(raw: string) {
+  let html = escapeHtml(raw);
+  html = html.replace(
+    /\[ЗАПОЛНИ:[^\]]*\]/g,
+    (match) => `<span class="spec-fill">${match}</span>`,
+  );
+  const isHeading = raw.startsWith('#');
+  const isLabel = raw.trimEnd().endsWith(':') && !raw.trimStart().startsWith('-');
+  if (isHeading || isLabel) {
+    return `<span class="spec-emphasis">${html}</span>`;
+  }
+  return html;
+}
+
+function renderLines(source: string) {
+  return source.split('\n').map((line, index) => ({
+    n: index + 1,
+    html: highlightLine(line),
+  }));
+}
+
+const panels = [
+  { id: 'tz', lines: renderLines(tz) },
+  { id: 'mdc', lines: renderLines(mdc) },
+  { id: 'prompt', lines: renderLines(prompt) },
+] as const;
 ---
 
 <div class:list={['spec-window', className]}>
-  <BorderBeam size={72} duration={9} />
+  <BorderBeam size={120} duration={10} borderWidth={1} />
+  <input type="radio" name={uid} id={`${uid}-tz`} checked class="spec-radio" data-tab="tz" />
+  <input type="radio" name={uid} id={`${uid}-mdc`} class="spec-radio" data-tab="mdc" />
+  <input type="radio" name={uid} id={`${uid}-prompt`} class="spec-radio" data-tab="prompt" />
+
   <div class="spec-chrome">
     <div class="spec-dots" aria-hidden="true">
       <span></span><span></span><span></span>
     </div>
     <div class="spec-tabs" role="tablist" aria-label="Файлы спецификации">
-      <input type="radio" name={uid} id={`${uid}-tz`} checked class="spec-radio" />
-      <label for={`${uid}-tz`} class="spec-tab" role="tab">ТЗ.md</label>
-      <input type="radio" name={uid} id={`${uid}-agents`} class="spec-radio" />
-      <label for={`${uid}-agents`} class="spec-tab" role="tab">AGENTS.md</label>
-      <input type="radio" name={uid} id={`${uid}-prompt`} class="spec-radio" />
-      <label for={`${uid}-prompt`} class="spec-tab" role="tab">промпт</label>
+      <label for={`${uid}-tz`} class="spec-tab" role="tab" data-for="tz">ТЗ.md</label>
+      <label for={`${uid}-mdc`} class="spec-tab" role="tab" data-for="mdc">project.mdc</label>
+      <label for={`${uid}-prompt`} class="spec-tab" role="tab" data-for="prompt">промпт</label>
     </div>
   </div>
-  <div class="spec-body" aria-hidden="true">
-    <div class="spec-panel" data-panel="tz">
-      <span class="spec-line"><i></i><i></i><i class="short"></i></span>
-      <span class="spec-line"><i class="mid"></i><i></i></span>
-      <span class="spec-line"><i></i><i class="short"></i><i class="mid"></i></span>
-      <span class="spec-line"><i class="short"></i></span>
-      <span class="spec-line"><i></i><i></i><i class="mid"></i></span>
+
+  <div class="spec-main">
+    <aside class="spec-sidebar" aria-hidden="true">
+      <FileTree variant="spec" />
+    </aside>
+    <div class="spec-code">
+      {
+        panels.map((panel) => (
+          <div class={`spec-panel spec-panel-${panel.id}`} data-panel={panel.id}>
+            {panel.lines.map((line) => (
+              <div class="spec-line">
+                <span class="spec-ln">{line.n}</span>
+                <span class="spec-code-text" set:html={line.html} />
+              </div>
+            ))}
+          </div>
+        ))
+      }
     </div>
+  </div>
+
+  <div class="spec-status">
+    <span>Пример результата генератора · Markdown · UTF-8</span>
   </div>
 </div>
 
 <style>
   .spec-window {
     position: relative;
-    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 26.25rem;
     border: 1px solid var(--ps-border);
-    border-radius: var(--ps-radius-card);
-    background: var(--ps-code-bg);
+    border-radius: 12px;
+    background: #0e0f12;
     overflow: hidden;
+    mask-image: linear-gradient(#000 0%, #000 calc(100% - 120px), transparent 100%);
+    -webkit-mask-image: linear-gradient(#000 0%, #000 calc(100% - 120px), transparent 100%);
+  }
+
+  .spec-radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
   }
 
   .spec-chrome {
     display: flex;
     align-items: center;
     gap: 1rem;
-    min-height: 2.75rem;
+    flex-shrink: 0;
+    height: 2.5rem;
     padding: 0 0.85rem;
     border-bottom: 1px solid var(--ps-border);
     background: var(--ps-surface);
@@ -65,74 +182,156 @@ const uid = `spec-${Math.random().toString(36).slice(2, 8)}`;
   }
 
   .spec-dots span {
-    width: 0.55rem;
-    height: 0.55rem;
+    width: 10px;
+    height: 10px;
     border-radius: 999px;
-    background: var(--ps-border);
+    background: #3a3f47;
   }
 
   .spec-tabs {
     display: flex;
+    align-items: stretch;
     gap: 0.15rem;
+    height: 100%;
     overflow-x: auto;
     scrollbar-width: none;
   }
 
-  .spec-radio {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
   .spec-tab {
+    display: inline-flex;
+    align-items: center;
     flex-shrink: 0;
-    padding: 0.35rem 0.7rem;
-    border-radius: 6px;
+    padding: 0 0.7rem;
+    border-top: 1px solid transparent;
     font-family: var(--ps-font-mono);
-    font-size: 0.75rem;
+    font-size: 0.78125rem;
     color: var(--ps-muted);
     cursor: pointer;
-    transition: background 160ms ease-out, color 160ms ease-out;
+    transition:
+      background 160ms ease-out,
+      color 160ms ease-out,
+      border-color 160ms ease-out;
   }
 
-  .spec-radio:checked + .spec-tab {
-    background: var(--ps-accent-soft);
+  .spec-window:has(.spec-radio[data-tab='tz']:checked) .spec-tab[data-for='tz'],
+  .spec-window:has(.spec-radio[data-tab='mdc']:checked) .spec-tab[data-for='mdc'],
+  .spec-window:has(.spec-radio[data-tab='prompt']:checked) .spec-tab[data-for='prompt'] {
+    background: var(--ps-surface-2);
     color: var(--ps-text);
+    border-top-color: var(--ps-accent);
   }
 
-  .spec-radio:focus-visible + .spec-tab {
+  .spec-window:has(.spec-radio[data-tab='tz']:focus-visible) .spec-tab[data-for='tz'],
+  .spec-window:has(.spec-radio[data-tab='mdc']:focus-visible) .spec-tab[data-for='mdc'],
+  .spec-window:has(.spec-radio[data-tab='prompt']:focus-visible) .spec-tab[data-for='prompt'] {
     outline: 2px solid var(--ps-accent);
-    outline-offset: 2px;
+    outline-offset: -2px;
   }
 
-  .spec-body {
-    padding: 1.15rem 1.25rem 1.4rem;
+  .spec-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .spec-sidebar {
+    display: none;
+    border-right: 1px solid var(--ps-border);
+    overflow: auto;
+    background: #0c0d10;
+  }
+
+  .spec-code {
+    position: relative;
+    min-width: 0;
+    overflow: auto;
   }
 
   .spec-panel {
-    display: grid;
-    gap: 0.7rem;
+    display: none;
+    padding: 0.65rem 0 1rem;
+  }
+
+  .spec-window:has(.spec-radio[data-tab='tz']:checked) .spec-panel-tz,
+  .spec-window:has(.spec-radio[data-tab='mdc']:checked) .spec-panel-mdc,
+  .spec-window:has(.spec-radio[data-tab='prompt']:checked) .spec-panel-prompt {
+    display: block;
+  }
+
+  .spec-window:has(.spec-radio[data-tab='tz']:checked) :global(.file-tz),
+  .spec-window:has(.spec-radio[data-tab='mdc']:checked) :global(.file-mdc),
+  .spec-window:has(.spec-radio[data-tab='prompt']:checked) :global(.file-prompt) {
+    background: var(--ps-surface-2);
+    color: var(--ps-text);
+  }
+
+  .spec-window:has(.spec-radio[data-tab='tz']:checked) :global(.file-tz .file-tree-icon),
+  .spec-window:has(.spec-radio[data-tab='mdc']:checked) :global(.file-mdc .file-tree-icon),
+  .spec-window:has(.spec-radio[data-tab='prompt']:checked) :global(.file-prompt .file-tree-icon) {
+    color: var(--ps-text);
   }
 
   .spec-line {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+    min-height: 1.7em;
+  }
+
+  .spec-ln {
+    padding-right: 0.75rem;
+    text-align: right;
+    color: #4b5260;
+    font-family: var(--ps-font-mono);
+    font-size: 0.84375rem;
+    line-height: 1.7;
+    user-select: none;
+  }
+
+  .spec-code-text {
+    color: #c9ced6;
+    font-family: var(--ps-font-mono);
+    font-size: 0.84375rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .spec-code-text :global(.spec-emphasis) {
+    color: #f5f5f5;
+  }
+
+  .spec-code-text :global(.spec-fill) {
+    background: var(--ps-accent-soft);
+    border-radius: 3px;
+    padding: 0.05em 0.2em;
+  }
+
+  .spec-status {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
+    align-items: center;
+    flex-shrink: 0;
+    height: 1.75rem;
+    padding: 0 0.85rem;
+    border-top: 1px solid var(--ps-border);
+    background: var(--ps-surface);
+    font-family: var(--ps-font-mono);
+    font-size: 0.71875rem;
+    color: var(--ps-muted);
   }
 
-  .spec-line i {
-    display: block;
-    height: 0.55rem;
-    width: 28%;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--ps-muted) 28%, transparent);
-  }
+  @media (min-width: 720px) {
+    .spec-window {
+      height: 32.5rem;
+    }
 
-  .spec-line i.mid {
-    width: 18%;
-  }
+    .spec-main {
+      grid-template-columns: 220px minmax(0, 1fr);
+    }
 
-  .spec-line i.short {
-    width: 10%;
+    .spec-sidebar {
+      display: block;
+    }
   }
 </style>
