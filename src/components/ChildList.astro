@@ -12,14 +12,19 @@ const { items, heading } = Astro.props;
 {
   items.length > 0 && (
     <section aria-labelledby="section-children">
-      <h2 id="section-children" class="mt-10 text-xl font-semibold">
+      <h2 id="section-children" class="section-heading">
         {heading}
       </h2>
       <ul class="child-list">
         {items.map((item) => (
           <li>
-            <a href={item.href}>{item.title}</a>
-            <p>{item.description}</p>
+            <a href={item.href} class="child-card">
+              <span class="child-card-body">
+                <span class="child-card-title">{item.title}</span>
+                <span class="child-card-desc">{item.description}</span>
+              </span>
+              <span class="child-card-arrow" aria-hidden="true">→</span>
+            </a>
           </li>
         ))}
       </ul>

@@ -5,6 +5,7 @@ interface Props {
 }
 
 const { query, draft } = Astro.props;
+const show = import.meta.env.DEV && draft && Boolean(query);
 ---
 
-{draft && query && <p class="query">Главный запрос: {query}</p>}
+{show && <p class="query">Главный запрос: {query}</p>}

@@ -25,7 +25,30 @@ function isParent(node: HastNode): node is HastParent {
   return Array.isArray((node as HastParent).children);
 }
 
+function langFromPre(pre: HastElement): string {
+  const className = pre.properties.className;
+  const classes = Array.isArray(className)
+    ? className.map(String)
+    : typeof className === 'string'
+      ? className.split(/\s+/)
+      : [];
+  for (const child of pre.children) {
+    if (!isElement(child) || child.tagName !== 'code') continue;
+    const codeClass = child.properties.className;
+    const codeClasses = Array.isArray(codeClass)
+      ? codeClass.map(String)
+      : typeof codeClass === 'string'
+        ? codeClass.split(/\s+/)
+        : [];
+    classes.push(...codeClasses);
+  }
+  const lang = classes.find((name) => name.startsWith('language-'))?.slice('language-'.length);
+  return lang || 'код';
+}
+
 function wrapPre(pre: HastElement): HastElement {
+  const filename = langFromPre(pre);
+
   const button: HastElement = {
     type: 'element',
     tagName: 'button',
@@ -36,7 +59,35 @@ function wrapPre(pre: HastElement): HastElement {
       ariaLabel: 'Скопировать',
       ariaLive: 'polite',
     },
-    children: [{ type: 'text', value: 'Скопировать' }],
+    children: [
+      {
+        type: 'element',
+        tagName: 'span',
+        properties: { className: ['copy-idle'] },
+        children: [{ type: 'text', value: 'Скопировать' }],
+      },
+      {
+        type: 'element',
+        tagName: 'span',
+        properties: { className: ['copy-done'], hidden: true },
+        children: [{ type: 'text', value: '✓ Скопировано' }],
+      },
+    ],
+  };
+
+  const toolbar: HastElement = {
+    type: 'element',
+    tagName: 'div',
+    properties: { className: ['copy-toolbar'] },
+    children: [
+      {
+        type: 'element',
+        tagName: 'span',
+        properties: { className: ['copy-filename'] },
+        children: [{ type: 'text', value: filename }],
+      },
+      button,
+    ],
   };
 
   return {
@@ -46,7 +97,7 @@ function wrapPre(pre: HastElement): HastElement {
       className: ['copy-block'],
       dataCopyRoot: '',
     },
-    children: [button, pre],
+    children: [toolbar, pre],
   };
 }
 

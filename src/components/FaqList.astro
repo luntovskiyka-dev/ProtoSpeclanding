@@ -11,15 +11,20 @@ const { items } = Astro.props;
 {
   items.length > 0 && (
     <section class="faq" aria-labelledby="faq-heading">
-      <h2 id="faq-heading" class="text-xl font-semibold">
+      <h2 id="faq-heading" class="section-heading">
         Вопросы и ответы
       </h2>
-      {items.map((item) => (
-        <div>
-          <h3 class="mt-4 text-base font-semibold">{item.question}</h3>
-          <p class="mt-1">{item.answer}</p>
-        </div>
-      ))}
+      <div class="faq-list">
+        {items.map((item) => (
+          <details class="faq-item">
+            <summary>
+              <h3>{item.question}</h3>
+              <span class="faq-chevron" aria-hidden="true"></span>
+            </summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
     </section>
   )
 }

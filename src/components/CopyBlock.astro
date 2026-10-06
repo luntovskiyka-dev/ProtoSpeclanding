@@ -2,12 +2,19 @@
 interface Props {
   code: string;
   label?: string;
+  filename?: string;
 }
 
-const { code, label = 'Скопировать' } = Astro.props;
+const { code, label = 'Скопировать', filename = 'prompt.md' } = Astro.props;
 ---
 
 <div class="copy-block" data-copy-root>
-  <button type="button" class="copy-button" data-copy aria-label={label} aria-live="polite">{label}</button>
+  <div class="copy-toolbar">
+    <span class="copy-filename">{filename}</span>
+    <button type="button" class="copy-button" data-copy aria-label={label} aria-live="polite">
+      <span class="copy-idle">{label}</span>
+      <span class="copy-done" hidden>✓ Скопировано</span>
+    </button>
+  </div>
   <pre><code>{code}</code></pre>
 </div>

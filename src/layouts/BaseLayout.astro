@@ -117,17 +117,23 @@ const canonicalTag = `<link rel="canonical" href="${canonical}">`;
           if (!(btn instanceof HTMLButtonElement) || btn.dataset.copyBound === '1') return;
           btn.dataset.copyBound = '1';
           var timer = 0;
+          var idle = btn.querySelector('.copy-idle');
+          var done = btn.querySelector('.copy-done');
           btn.addEventListener('click', function () {
             var root = btn.closest('[data-copy-root]');
             var code = root ? root.querySelector('code') : null;
             var text = code ? code.textContent || '' : '';
             copyText(text).then(function () {
               window.clearTimeout(timer);
-              btn.textContent = 'Скопировано';
+              btn.classList.add('is-copied');
               btn.setAttribute('aria-label', 'Скопировано');
+              if (idle) idle.hidden = true;
+              if (done) done.hidden = false;
               timer = window.setTimeout(function () {
-                btn.textContent = 'Скопировать';
+                btn.classList.remove('is-copied');
                 btn.setAttribute('aria-label', 'Скопировать');
+                if (idle) idle.hidden = false;
+                if (done) done.hidden = true;
               }, 2000);
             }).catch(function () {});
           });
