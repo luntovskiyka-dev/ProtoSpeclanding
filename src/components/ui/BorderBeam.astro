@@ -1,0 +1,64 @@
+---
+/**
+ * Border Beam — adapted from Magic UI (Dillion Verma), MIT.
+ * https://21st.dev/@dillionverma/components/border-beam
+ * https://github.com/magicuidesign/magicui
+ * Motion/framer replaced with CSS @keyframes.
+ */
+interface Props {
+  class?: string;
+  size?: number;
+  duration?: number;
+  delay?: number;
+}
+
+const { class: className = '', size = 80, duration = 8, delay = 0 } = Astro.props;
+---
+
+<span
+  class:list={['border-beam', className]}
+  style={`--beam-size: ${size}px; --beam-duration: ${duration}s; --beam-delay: ${delay}s;`}
+  aria-hidden="true"
+></span>
+
+<style>
+  .border-beam {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  .border-beam::before {
+    content: '';
+    position: absolute;
+    width: var(--beam-size);
+    height: var(--beam-size);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--ps-accent),
+      color-mix(in srgb, var(--ps-accent-hover) 80%, white),
+      transparent
+    );
+    offset-path: rect(0 auto auto 0 round var(--ps-radius-card));
+    offset-rotate: 0deg;
+    animation: ps-border-beam var(--beam-duration) linear infinite;
+    animation-delay: var(--beam-delay);
+    opacity: 0.85;
+  }
+
+  @keyframes ps-border-beam {
+    to {
+      offset-distance: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .border-beam::before {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>

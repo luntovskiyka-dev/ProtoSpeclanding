@@ -1,0 +1,59 @@
+---
+/**
+ * Grid Pattern — adapted from Magic UI (Dillion Verma), MIT.
+ * https://21st.dev/@dillionverma/components/grid-pattern
+ * https://github.com/magicuidesign/magicui
+ */
+interface Props {
+  class?: string;
+  size?: number;
+}
+
+const { class: className = '', size = 32 } = Astro.props;
+const patternId = `ps-grid-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<svg
+  class:list={['grid-pattern', className]}
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <pattern
+      id={patternId}
+      width={size}
+      height={size}
+      patternUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+    >
+      <path d={`M.5 ${size}V.5H${size}`} fill="none" stroke="currentColor" stroke-width="1" />
+    </pattern>
+    <radialGradient id={`${patternId}-fade`} cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="white" stop-opacity="1" />
+      <stop offset="70%" stop-color="white" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="white" stop-opacity="0" />
+    </radialGradient>
+    <mask id={`${patternId}-mask`}>
+      <rect width="100%" height="100%" fill={`url(#${patternId}-fade)`} />
+    </mask>
+  </defs>
+  <rect
+    width="100%"
+    height="100%"
+    fill={`url(#${patternId})`}
+    mask={`url(#${patternId}-mask)`}
+  />
+</svg>
+
+<style>
+  .grid-pattern {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--ps-border);
+    opacity: 0.45;
+  }
+</style>

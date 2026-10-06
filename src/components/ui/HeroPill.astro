@@ -1,0 +1,63 @@
+---
+/**
+ * Hero Pill — adapted from Origin UI, MIT.
+ * https://21st.dev/@originui/components/hero-pill
+ */
+interface Props {
+  href?: string;
+  class?: string;
+}
+
+const { href, class: className = '' } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag class:list={['hero-pill', className]} href={href}>
+  <slot name="icon" />
+  <span class="hero-pill-text"><slot /></span>
+  {
+    href && (
+      <span class="hero-pill-arrow" aria-hidden="true">
+        →
+      </span>
+    )
+  }
+</Tag>
+
+<style>
+  .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    padding: 0.35rem 0.75rem 0.35rem 0.55rem;
+    border: 1px solid var(--ps-border);
+    border-radius: 999px;
+    background: var(--ps-accent-soft);
+    color: var(--ps-text);
+    font-family: var(--ps-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+      border-color 160ms ease-out,
+      background 160ms ease-out;
+  }
+
+  a.hero-pill:hover {
+    border-color: var(--ps-accent);
+    background: color-mix(in srgb, var(--ps-accent) 18%, transparent);
+  }
+
+  .hero-pill-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--ps-muted);
+  }
+
+  .hero-pill-arrow {
+    color: var(--ps-accent);
+  }
+</style>

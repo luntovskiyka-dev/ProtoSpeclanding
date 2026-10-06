@@ -1,0 +1,138 @@
+---
+/**
+ * Spec Window — editor chrome with CSS-only radio tabs.
+ * Border beam edge adapted from Magic UI Border Beam (MIT).
+ */
+import BorderBeam from './BorderBeam.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+const uid = `spec-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div class:list={['spec-window', className]}>
+  <BorderBeam size={72} duration={9} />
+  <div class="spec-chrome">
+    <div class="spec-dots" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="spec-tabs" role="tablist" aria-label="Файлы спецификации">
+      <input type="radio" name={uid} id={`${uid}-tz`} checked class="spec-radio" />
+      <label for={`${uid}-tz`} class="spec-tab" role="tab">ТЗ.md</label>
+      <input type="radio" name={uid} id={`${uid}-agents`} class="spec-radio" />
+      <label for={`${uid}-agents`} class="spec-tab" role="tab">AGENTS.md</label>
+      <input type="radio" name={uid} id={`${uid}-prompt`} class="spec-radio" />
+      <label for={`${uid}-prompt`} class="spec-tab" role="tab">промпт</label>
+    </div>
+  </div>
+  <div class="spec-body" aria-hidden="true">
+    <div class="spec-panel" data-panel="tz">
+      <span class="spec-line"><i></i><i></i><i class="short"></i></span>
+      <span class="spec-line"><i class="mid"></i><i></i></span>
+      <span class="spec-line"><i></i><i class="short"></i><i class="mid"></i></span>
+      <span class="spec-line"><i class="short"></i></span>
+      <span class="spec-line"><i></i><i></i><i class="mid"></i></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .spec-window {
+    position: relative;
+    margin-top: 2rem;
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-card);
+    background: var(--ps-code-bg);
+    overflow: hidden;
+  }
+
+  .spec-chrome {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 2.75rem;
+    padding: 0 0.85rem;
+    border-bottom: 1px solid var(--ps-border);
+    background: var(--ps-surface);
+  }
+
+  .spec-dots {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .spec-dots span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--ps-border);
+  }
+
+  .spec-tabs {
+    display: flex;
+    gap: 0.15rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .spec-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .spec-tab {
+    flex-shrink: 0;
+    padding: 0.35rem 0.7rem;
+    border-radius: 6px;
+    font-family: var(--ps-font-mono);
+    font-size: 0.75rem;
+    color: var(--ps-muted);
+    cursor: pointer;
+    transition: background 160ms ease-out, color 160ms ease-out;
+  }
+
+  .spec-radio:checked + .spec-tab {
+    background: var(--ps-accent-soft);
+    color: var(--ps-text);
+  }
+
+  .spec-radio:focus-visible + .spec-tab {
+    outline: 2px solid var(--ps-accent);
+    outline-offset: 2px;
+  }
+
+  .spec-body {
+    padding: 1.15rem 1.25rem 1.4rem;
+  }
+
+  .spec-panel {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .spec-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .spec-line i {
+    display: block;
+    height: 0.55rem;
+    width: 28%;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ps-muted) 28%, transparent);
+  }
+
+  .spec-line i.mid {
+    width: 18%;
+  }
+
+  .spec-line i.short {
+    width: 10%;
+  }
+</style>

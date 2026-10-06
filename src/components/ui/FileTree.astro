@@ -1,0 +1,117 @@
+---
+/**
+ * File Tree — adapted from Magic UI (Dillion Verma), MIT.
+ * https://21st.dev/@dillionverma/components/file-tree
+ * Static render only (no radix / lucide).
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['file-tree', className]} role="tree" aria-label="Файлы правил">
+  <div class="file-tree-row is-folder" role="treeitem" aria-expanded="true">
+    <span class="file-tree-icon" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M1.5 3.5h5l1.5 1.5H14.5v7.5a1 1 0 0 1-1 1h-12a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2" />
+      </svg>
+    </span>
+    <span class="file-tree-name">project</span>
+  </div>
+  <ul class="file-tree-children" role="group">
+    <li role="none">
+      <a class="file-tree-row" role="treeitem" href="/agents-md">
+        <span class="file-tree-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3.5 1.5h6l3 3V14a.5.5 0 0 1-.5.5h-8.5a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 .5-.5Z" stroke="currentColor" stroke-width="1.2" />
+            <path d="M9.5 1.5V5H13" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+        </span>
+        <span class="file-tree-name">AGENTS.md</span>
+      </a>
+    </li>
+    <li role="none">
+      <a class="file-tree-row" role="treeitem" href="/claude-code/claude-md">
+        <span class="file-tree-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3.5 1.5h6l3 3V14a.5.5 0 0 1-.5.5h-8.5a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 .5-.5Z" stroke="currentColor" stroke-width="1.2" />
+            <path d="M9.5 1.5V5H13" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+        </span>
+        <span class="file-tree-name">CLAUDE.md</span>
+      </a>
+    </li>
+    <li role="none">
+      <div class="file-tree-row is-folder" role="treeitem" aria-expanded="true">
+        <span class="file-tree-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M1.5 3.5h5l1.5 1.5H14.5v7.5a1 1 0 0 1-1 1h-12a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+        </span>
+        <span class="file-tree-name">.cursor/rules</span>
+      </div>
+      <ul class="file-tree-children" role="group">
+        <li role="none">
+          <a class="file-tree-row" role="treeitem" href="/cursor/rules">
+            <span class="file-tree-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M3.5 1.5h6l3 3V14a.5.5 0 0 1-.5.5h-8.5a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 .5-.5Z" stroke="currentColor" stroke-width="1.2" />
+                <path d="M9.5 1.5V5H13" stroke="currentColor" stroke-width="1.2" />
+              </svg>
+            </span>
+            <span class="file-tree-name">project.mdc</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<style>
+  .file-tree {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-card);
+    background: var(--ps-surface);
+    font-family: var(--ps-font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .file-tree-children {
+    margin: 0;
+    padding: 0 0 0 1.1rem;
+    list-style: none;
+  }
+
+  .file-tree-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 1.75rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 6px;
+    color: var(--ps-text);
+    text-decoration: none;
+    transition: background 160ms ease-out, color 160ms ease-out;
+  }
+
+  a.file-tree-row:hover {
+    background: var(--ps-accent-soft);
+    color: var(--ps-accent);
+  }
+
+  .file-tree-icon {
+    display: inline-flex;
+    color: var(--ps-muted);
+  }
+
+  a.file-tree-row:hover .file-tree-icon {
+    color: var(--ps-accent);
+  }
+
+  .is-folder .file-tree-name {
+    color: var(--ps-muted);
+  }
+</style>
