@@ -1,25 +1,45 @@
 ---
 /**
  * Border Beam — adapted from Magic UI (Dillion Verma), MIT.
- * https://21st.dev/@dillionverma/components/border-beam
+ * Source: design-refs/magicui/border-beam.tsx
  * https://github.com/magicuidesign/magicui
- * Motion/framer replaced with CSS @keyframes.
+ * Motion/framer replaced with CSS @keyframes on offset-distance.
  */
 interface Props {
   class?: string;
   size?: number;
   duration?: number;
   delay?: number;
+  colorFrom?: string;
+  colorTo?: string;
+  borderWidth?: number;
+  reverse?: boolean;
+  initialOffset?: number;
 }
 
-const { class: className = '', size = 80, duration = 8, delay = 0 } = Astro.props;
+const {
+  class: className = '',
+  size = 120,
+  duration = 10,
+  delay = 0,
+  colorFrom = 'var(--ps-accent)',
+  colorTo = 'transparent',
+  borderWidth = 1,
+  reverse = false,
+  initialOffset = 0,
+} = Astro.props;
+
+const start = reverse ? `${100 - initialOffset}%` : `${initialOffset}%`;
+const end = reverse ? `${-initialOffset}%` : `${100 + initialOffset}%`;
 ---
 
-<span
+<div
   class:list={['border-beam', className]}
-  style={`--beam-size: ${size}px; --beam-duration: ${duration}s; --beam-delay: ${delay}s;`}
+  style={`--border-beam-width: ${borderWidth}px; --beam-size: ${size}px; --beam-duration: ${duration}s; --beam-delay: ${-delay}s; --color-from: ${colorFrom}; --color-to: ${colorTo}; --beam-from: ${start}; --beam-to: ${end};`}
   aria-hidden="true"
-></span>
+>
+  <div class="border-beam-glow"></div>
+</div>
 
 <style>
   .border-beam {
@@ -27,36 +47,38 @@ const { class: className = '', size = 80, duration = 8, delay = 0 } = Astro.prop
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    overflow: hidden;
+    border: var(--border-beam-width) solid transparent;
+    mask-image: linear-gradient(transparent, transparent), linear-gradient(#000, #000);
+    mask-composite: intersect;
+    -webkit-mask-image: linear-gradient(transparent, transparent), linear-gradient(#000, #000);
+    -webkit-mask-composite: source-in;
+    mask-clip: padding-box, border-box;
+    -webkit-mask-clip: padding-box, border-box;
   }
 
-  .border-beam::before {
-    content: '';
+  .border-beam-glow {
     position: absolute;
     width: var(--beam-size);
-    height: var(--beam-size);
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--ps-accent),
-      color-mix(in srgb, var(--ps-accent-hover) 80%, white),
-      transparent
-    );
-    offset-path: rect(0 auto auto 0 round var(--ps-radius-card));
+    aspect-ratio: 1;
+    background: linear-gradient(to left, var(--color-from), var(--color-to), transparent);
+    offset-path: rect(0 auto auto 0 round var(--beam-size));
     offset-rotate: 0deg;
+    offset-distance: var(--beam-from);
     animation: ps-border-beam var(--beam-duration) linear infinite;
     animation-delay: var(--beam-delay);
-    opacity: 0.85;
   }
 
   @keyframes ps-border-beam {
+    from {
+      offset-distance: var(--beam-from);
+    }
     to {
-      offset-distance: 100%;
+      offset-distance: var(--beam-to);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .border-beam::before {
+    .border-beam-glow {
       animation: none;
       opacity: 0;
     }
