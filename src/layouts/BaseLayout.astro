@@ -1,4 +1,5 @@
 ---
+import geologicaCyrillicUrl from '@fontsource-variable/geologica/files/geologica-cyrillic-wght-normal.woff2?url';
 import onestCyrillicUrl from '@fontsource-variable/onest/files/onest-cyrillic-wght-normal.woff2?url';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
@@ -69,6 +70,13 @@ const canonicalTag = `<link rel="canonical" href="${canonical}">`;
     <meta property="og:locale" content="ru_RU">
     <meta property="og:site_name" content="ProtoSpec">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link
+      rel="preload"
+      href={geologicaCyrillicUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link
       rel="preload"
       href={onestCyrillicUrl}
