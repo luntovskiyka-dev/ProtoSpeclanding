@@ -29,7 +29,7 @@ const generatorCurrent = path === '/generator';
     </nav>
     <a
       href="/generator"
-      class="header-cta"
+      class="header-cta btn btn-primary"
       aria-current={generatorCurrent ? 'page' : undefined}
     >
       Генератор
@@ -43,7 +43,7 @@ const generatorCurrent = path === '/generator';
     top: 0;
     z-index: 50;
     border-bottom: 1px solid var(--ps-border);
-    background: color-mix(in srgb, var(--ps-bg) 78%, transparent);
+    background: rgb(10 10 11 / 0.72);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -68,11 +68,12 @@ const generatorCurrent = path === '/generator';
   .header-nav {
     grid-area: nav;
     display: flex;
-    gap: 0.25rem 1.25rem;
+    align-items: center;
+    gap: 1.75rem;
+    height: 2.5rem;
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.75rem;
   }
 
   .header-nav::-webkit-scrollbar {
@@ -97,28 +98,9 @@ const generatorCurrent = path === '/generator';
 
   .header-cta {
     grid-area: cta;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     height: 2rem;
     padding: 0 0.875rem;
-    border-radius: var(--ps-radius-control);
-    background: var(--ps-accent);
-    color: #0b0d10;
     font-size: 0.8125rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 160ms ease-out;
-  }
-
-  .header-cta:hover {
-    background: var(--ps-accent-hover);
-  }
-
-  @media (prefers-color-scheme: light) {
-    .header-cta {
-      color: #ffffff;
-    }
   }
 
   @media (min-width: 900px) {
@@ -126,15 +108,15 @@ const generatorCurrent = path === '/generator';
       grid-template-columns: auto 1fr auto;
       grid-template-areas: 'logo nav cta';
       column-gap: 1.75rem;
-      min-height: 3.75rem;
+      min-height: 4rem;
     }
 
     .header-logo {
-      min-height: 3.75rem;
+      min-height: 4rem;
     }
 
     .header-nav {
-      padding-bottom: 0;
+      height: auto;
       overflow: visible;
     }
   }
