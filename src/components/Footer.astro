@@ -1,8 +1,146 @@
-<footer class="site-footer border-t">
-  <div class="wrap flex flex-wrap gap-x-5 gap-y-2 py-6 text-sm text-muted">
-    <a href="/about" class="text-muted">О проекте</a>
-    <a href="/contacts" class="text-muted">Контакты</a>
-    <a href="/privacy" class="text-muted">Конфиденциальность</a>
-    <a href="https://app.protospec.ru" class="text-muted" rel="noopener noreferrer">Приложение</a>
+---
+import Logo from './Logo.astro';
+
+const sections = [
+  { href: '/cursor', label: 'Cursor' },
+  { href: '/claude-code', label: 'Claude Code' },
+  { href: '/zadachi', label: 'Задачи' },
+  { href: '/prompty', label: 'Промпты' },
+  { href: '/blog', label: 'Блог' },
+];
+
+const rules = [
+  { href: '/agents-md', label: 'AGENTS.md' },
+  { href: '/claude-code/claude-md', label: 'CLAUDE.md' },
+  { href: '/cursor/rules', label: '.cursor/rules' },
+];
+
+const project = [
+  { href: '/about', label: 'О проекте' },
+  { href: '/contacts', label: 'Контакты' },
+  { href: '/privacy', label: 'Конфиденциальность' },
+  { href: 'https://app.protospec.ru', label: 'Приложение', external: true },
+];
+---
+
+<footer class="site-footer">
+  <div class="footer-inner wrap-wide">
+    <div class="footer-brand">
+      <Logo />
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <p class="footer-heading">Разделы</p>
+        <ul>
+          {sections.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p class="footer-heading">Файлы правил</p>
+        <ul>
+          {rules.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p class="footer-heading">Проект</p>
+        <ul>
+          {project.map((item) => (
+            <li>
+              {item.external ? (
+                <a href={item.href} rel="noopener noreferrer">
+                  {item.label}
+                </a>
+              ) : (
+                <a href={item.href}>{item.label}</a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom wrap-wide">
+    <p class="footer-mono">ProtoSpec · ru</p>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--ps-border);
+    background: var(--ps-surface);
+    margin-top: auto;
+  }
+
+  .footer-inner {
+    display: grid;
+    gap: 2rem;
+    padding: 2.5rem 0 1.75rem;
+  }
+
+  .footer-cols {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .footer-heading {
+    margin: 0 0 0.75rem;
+    font-family: var(--ps-font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ps-muted);
+  }
+
+  .footer-col ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .footer-col a {
+    color: var(--ps-text);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: color 160ms ease-out;
+  }
+
+  .footer-col a:hover {
+    color: var(--ps-accent);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid var(--ps-border);
+    padding: 1rem 0 1.5rem;
+  }
+
+  .footer-mono {
+    margin: 0;
+    font-family: var(--ps-font-mono);
+    font-size: 0.75rem;
+    color: var(--ps-muted);
+    letter-spacing: 0.04em;
+  }
+
+  @media (min-width: 720px) {
+    .footer-inner {
+      grid-template-columns: minmax(10rem, 14rem) 1fr;
+      align-items: start;
+    }
+
+    .footer-cols {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+  }
+</style>
