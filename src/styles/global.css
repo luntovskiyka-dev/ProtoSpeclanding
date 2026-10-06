@@ -2,20 +2,22 @@
 @import "./fonts.css";
 
 :root {
-  color-scheme: dark light;
+  color-scheme: dark;
 
-  --ps-bg: #0b0d10;
-  --ps-surface: #12151a;
-  --ps-surface-2: #181c23;
-  --ps-text: #e8eaed;
-  --ps-muted: #8b93a1;
-  --ps-border: #232933;
+  --ps-bg: #0a0a0b;
+  --ps-surface: #111215;
+  --ps-surface-2: #181a1f;
+  --ps-text: #f5f5f5;
+  --ps-muted: #8a8f98;
+  --ps-border: rgb(255 255 255 / 0.08);
   --ps-accent: #7c8cff;
   --ps-accent-hover: #97a3ff;
   --ps-accent-soft: rgb(124 140 255 / 0.12);
   --ps-signal: #f5b14c;
   --ps-answer-bg: var(--ps-surface-2);
-  --ps-code-bg: #0f1216;
+  --ps-code-bg: #0e0f12;
+  --ps-btn: #e6e6e6;
+  --ps-btn-ink: #0a0a0b;
 
   --ps-font-sans: "Onest Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --ps-font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
@@ -25,23 +27,6 @@
   --ps-space: 1.25rem;
   --ps-radius-card: 10px;
   --ps-radius-control: 8px;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --ps-bg: #f7f7f5;
-    --ps-surface: #ffffff;
-    --ps-surface-2: #f1f2f4;
-    --ps-text: #121417;
-    --ps-muted: #5b6270;
-    --ps-border: #e4e4e0;
-    --ps-accent: #4f5bd5;
-    --ps-accent-hover: #3d48b8;
-    --ps-accent-soft: rgb(79 91 213 / 0.1);
-    --ps-signal: #c47d12;
-    --ps-answer-bg: var(--ps-surface-2);
-    --ps-code-bg: #f1f2f4;
-  }
 }
 
 @theme inline {
@@ -64,7 +49,51 @@
 }
 
 html {
-  color-scheme: dark light;
+  color-scheme: dark;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: var(--ps-radius-control);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 160ms ease-out,
+    color 160ms ease-out,
+    opacity 160ms ease-out;
+}
+
+.btn-primary {
+  background: var(--ps-btn);
+  color: var(--ps-btn-ink);
+}
+
+.btn-primary:hover {
+  opacity: 0.92;
+}
+
+.btn-secondary {
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ps-text);
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  color: var(--ps-muted);
+}
+
+@media (max-width: 389px) {
+  .btn {
+    height: 2.75rem;
+  }
 }
 
 body {
@@ -142,7 +171,6 @@ h1 {
   padding-bottom: 4rem;
 }
 
-.site-header,
 .site-footer {
   background: var(--ps-surface);
   border-color: var(--ps-border);
